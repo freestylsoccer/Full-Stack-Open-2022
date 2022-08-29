@@ -9,28 +9,30 @@ const Button = ({onClick, text}) => (
   <button onClick={onClick}>{text}</button>
 )
 
-const Item = ({text, data}) => (
-  <p>{text} {data}</p>
+const Statistic = ({text, value}) => (
+  <p>{text} {value}</p>
 )
 
-const ItemPercentaje = ({text, data}) => (
-  <p>{text} {data*100} %</p>
+const StatisticPercentaje = ({text, value}) => (
+  <p>{text} {value*100} %</p>
 )
 
 const Statistics = (props) => {
   const { good, neutral, bad, total, averange, positive } = props.data
+
   if (total === 0) {
     return <p>No feedback given</p>
   }
+
   return (
     <>
-      <Item text="good" data={good} />
-      <Item text="neutral" data={neutral} />
-      <Item text="bad" data={bad} />
+      <Statistic text="good" value={good} />
+      <Statistic text="neutral" value={neutral} />
+      <Statistic text="bad" value={bad} />
 
-      <Item text="total" data={total} />
-      <Item text="averange" data={averange} />
-      <ItemPercentaje text="positive" data={positive} />
+      <Statistic text="total" value={total} />
+      <Statistic text="averange" value={averange} />
+      <StatisticPercentaje text="positive" value={positive} />
     </>
   )
 }
