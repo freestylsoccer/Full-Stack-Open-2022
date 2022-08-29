@@ -12,13 +12,18 @@ const Button = ({onClick, text}) => (
 const Item = ({text, data}) => (
   <p>{text} {data}</p>
 )
-
+const ItemPercentaje = ({text, data}) => (
+  <p>{text} {data*100} %</p>
+)
 const App = () => {
   // save clicks of each button to its own state
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
+  const total = good + neutral + bad
+  const averange = (good - bad) / total
+  const positive = good / total
   return (
     <div>
       <Title title="give feedback" />
@@ -29,6 +34,10 @@ const App = () => {
       <Item text={"good"} data={good} />
       <Item text={"neutral"} data={neutral} />
       <Item text={"bad"} data={bad} />
+
+      <Item text={"total"} data={total} />
+      <Item text={"averange"} data={averange} />
+      <ItemPercentaje text={"positive"} data={positive} />
     </div>
   )
 }
