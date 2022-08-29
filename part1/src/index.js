@@ -1,59 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 
-const Header = (props) => {
-  return (
-    <h1>{props.course}</h1>
-  )
-}
+const Title = ({title}) => (
+  <h1>{title}</h1>
+)
 
-const Part = (props) => {
-  return (
-    <p>{props.part.name} {props.part.exercises}</p>
-  )
-}
+const Button = ({onClick, text}) => (
+  <button onClick={onClick}>{text}</button>
+)
 
-const Content = (props) => {
-  return (
-    <>
-      <Part part={props.parts[0]} />
-      <Part part={props.parts[1]} />
-      <Part part={props.parts[2]} />
-    </>
-  )
-}
-
-const Total = (props) => {
-  let total = props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises
-  return (
-    <p>Number of exercises {total}</p>
-  )
-}
+const Item = ({text, data}) => (
+  <p>{text} {data}</p>
+)
 
 const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
-  }
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
 
   return (
     <div>
-      <Header course={course.name} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
+      <Title title="give feedback" />
+      <Button onClick={() => setGood(good + 1)} text="good" />
+      <Button onClick={() => setNeutral(neutral + 1)} text="neutral" />
+      <Button onClick={() => setBad(bad + 1)} text="bad" />
+      <Title title="statistics" />
+      <Item text={"good"} data={good} />
+      <Item text={"neutral"} data={neutral} />
+      <Item text={"bad"} data={bad} />
     </div>
   )
 }
