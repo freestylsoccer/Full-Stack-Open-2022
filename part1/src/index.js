@@ -25,15 +25,34 @@ const Statistics = (props) => {
   }
 
   return (
-    <>
-      <Statistic text="good" value={good} />
-      <Statistic text="neutral" value={neutral} />
-      <Statistic text="bad" value={bad} />
-
-      <Statistic text="total" value={total} />
-      <Statistic text="averange" value={averange} />
-      <StatisticPercentaje text="positive" value={positive} />
-    </>
+    <table>
+      <tbody>
+        <tr>
+          <td>{"good"}</td>
+          <td>{good}</td>
+        </tr>
+        <tr>
+          <td>{"neutral"}</td>
+          <td>{neutral}</td>
+        </tr>
+        <tr>
+          <td>{"bad"}</td>
+          <td>{bad}</td>
+        </tr>
+        <tr>
+          <td>{"all"}</td>
+          <td>{total}</td>
+        </tr>
+        <tr>
+          <td>{"averange"}</td>
+          <td>{averange}</td>
+        </tr>
+        <tr>
+          <td>{"positive"}</td>
+          <td>{positive * 100}%</td>
+        </tr>
+      </tbody>
+    </table>
   )
 }
 const App = () => {
