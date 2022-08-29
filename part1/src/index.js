@@ -18,11 +18,12 @@ const ItemPercentaje = ({text, data}) => (
 )
 
 const Statistics = (props) => {
-  const { title, good, neutral, bad, total, averange, positive } = props.data
-
+  const { good, neutral, bad, total, averange, positive } = props.data
+  if (total === 0) {
+    return <p>No feedback given</p>
+  }
   return (
     <>
-      <Title title={title} />
       <Item text="good" data={good} />
       <Item text="neutral" data={neutral} />
       <Item text="bad" data={bad} />
@@ -44,7 +45,6 @@ const App = () => {
   const positive = good / total
 
   const statistincsObj = {
-    title: "statistics",
     good,
     neutral,
     bad,
@@ -59,6 +59,7 @@ const App = () => {
       <Button onClick={() => setGood(good + 1)} text="good" />
       <Button onClick={() => setNeutral(neutral + 1)} text="neutral" />
       <Button onClick={() => setBad(bad + 1)} text="bad" />
+      <Title title="statistics" />
       <Statistics data={statistincsObj} />
     </div>
   )
