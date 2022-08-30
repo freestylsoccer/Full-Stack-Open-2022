@@ -9,6 +9,11 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
+    if (persons.find(element => element.name === newName)) {
+      window.alert(`${newName} is already added to phonebook`)
+      return
+    }
+
     let newPerson = [...persons]
     const person = {
       name: newName
