@@ -2,6 +2,7 @@ import Course from "./Components/Course"
 import Header from "./Components/Header"
 
 const App = () => {
+
   const courses = [
     {
       name: 'Half Stack application development',
