@@ -46,7 +46,9 @@ const App = () => {
 
   const personsToShow = nameFilter === ''
     ? persons
-    : persons.filter(person => person.name.toLocaleLowerCase().indexOf(nameFilter.toLocaleLowerCase()) !== -1)
+    : persons.filter(person =>
+        person.name.toLocaleLowerCase().indexOf(nameFilter.toLocaleLowerCase()) !== -1
+      )
 
   return (
     <div>
