@@ -6,11 +6,9 @@ const App = () => {
   const [filterCountry, setFilterCountry] = useState('')
 
   useEffect(() => {
-    console.log("use effect")
     axios
       .get('https://restcountries.com/v3.1/all')
       .then(response => {
-        console.log(response.data)
         setCountries(response.data)
       })
   }, [])
@@ -18,7 +16,7 @@ const App = () => {
   const countriesFiltered = filterCountry !== '' ? 
     countries.filter(country => country.name.common.toLowerCase().indexOf(filterCountry.toLocaleLowerCase()) !== -1)
     : []
-  console.log(countriesFiltered)
+
   return (
     <>
       <div>
@@ -41,7 +39,10 @@ const App = () => {
       ) : countriesFiltered.length <= 10 ? (
         <>
           {countriesFiltered.map(country => 
-            <p key={country.name.official}>{country.name.common}</p>
+           <div key={country.name.official}>
+              {country.name.common} 
+              <button onClick={() => setFilterCountry(country.name.common)}>show</button>
+            </div>
           )}
         </>
       ) : (
