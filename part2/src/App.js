@@ -1,78 +1,54 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import Filter from './Components/Filter'
-import PersonForm from './Components/PersonForm'
-import Persons from './Components/Persons'
 
 const App = () => {
-  const [ persons, setPersons ] = useState([]) 
-  const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
+  const [countries, setCountries] = useState([])
+  const [filterCountry, setFilterCountry] = useState('')
 
-  const [ nameFilter, setNameFilter ] = useState('')
   useEffect(() => {
-      // console.log("use effect")
-      axios
-        .get('http://localhost:3001/persons')
-        .then(response => {
-          console.log(response.data)
-          setPersons(response.data)
-        })
-    }, [])
+    console.log("use effect")
+    axios
+      .get('https://restcountries.com/v3.1/all')
+      .then(response => {
+        console.log(response.data)
+        setCountries(response.data)
+      })
+  }, [])
   
-  const addPerson = (event) => {
-    event.preventDefault()
-
-    if (persons.find(element => element.name === newName)) {
-      window.alert(`${newName} is already added to phonebook`)
-      return
-    }
-
-    let newPerson = [...persons]
-    const person = {
-      name: newName,
-      number: newNumber
-    }
-    newPerson = newPerson.concat(person)
-
-    setPersons(newPerson)
-    setNewName('')
-    setNewNumber('')
-  }
-
-  const handleNameChange = (event) => {
-    setNewName(event.target.value)
-  }
-
-  const handleNumberChange = (event) => {
-    setNewNumber(event.target.value)
-  }
-
-  const handleNameFilterChange = (event) => {
-    setNameFilter(event.target.value)
-  }
-
-  const personsToShow = nameFilter === ''
-    ? persons
-    : persons.filter(person =>
-        person.name.toLocaleLowerCase().indexOf(nameFilter.toLocaleLowerCase()) !== -1
-      )
-
+  const countriesFiltered = filterCountry !== '' ? 
+    countries.filter(country => country.name.common.toLowerCase().indexOf(filterCountry.toLocaleLowerCase()) !== -1)
+    : []
+  console.log(countriesFiltered)
   return (
-    <div>
-      <h2>Phonebook</h2>
-      <Filter nameFilter={nameFilter} onChange={handleNameFilterChange} />
-      <h3>add a new</h3>
-      <PersonForm
-        onSumbit={addPerson}
-        newName={newName}
-        newNumber={newNumber}
-        handleNameChange={handleNameChange}
-        handleNumberChange={handleNumberChange}
-      />
-      <h2>Numbers</h2>
-      <Persons personsToShow={personsToShow} />
-    </div>
+    <>
+      <div>
+        find countries <input value={filterCountry} onChange={(e) => setFilterCountry(e.target.value)} />
+      </div>
+
+      {countriesFiltered.length === 1 ? (
+        <>
+          <h2>{countriesFiltered[0].name.common}</h2>
+          <p>capital {countriesFiltered[0].capital}</p>
+          <p>population {countriesFiltered[0].population}</p>
+          <h2>languages</h2>
+          <ul>
+            {Object.entries(countriesFiltered[0].languages).map(([key, value]) =>
+              <li key={key}>{value}</li>
+            )}
+          </ul>
+          <img src={countriesFiltered[0].flags.png} width="250px" alt="flag"/>
+        </>
+      ) : countriesFiltered.length <= 10 ? (
+        <>
+          {countriesFiltered.map(country => 
+            <p key={country.name.official}>{country.name.common}</p>
+          )}
+        </>
+      ) : (
+        <p>Too many matches, specify another filter</p>
+      )
+      }
+    </>
   )
 }
 
