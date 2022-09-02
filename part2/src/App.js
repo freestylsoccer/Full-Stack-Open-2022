@@ -3,8 +3,10 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-
+import Notification from './components/Notification'
 import personService from './services/persons'
+
+
 
 const App = () => {
   const [ persons, setPersons ] = useState([]) 
@@ -12,6 +14,9 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
 
   const [ nameFilter, setNameFilter ] = useState('')
+
+  const [message, setMessage] = useState('')
+  const [type, setType] = useState('')
 
   useEffect(() => {
     personService
@@ -42,6 +47,12 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        setMessage(`Added ${returnedPerson.name}`)
+        setType('success')
+      })
+      .catch(error =>{
+        setMessage(error.message)
+        setType('error')
       })
     
   }
@@ -54,14 +65,15 @@ const App = () => {
       .deletePerson(id)
         .then(res => {
           setPersons(persons.filter(n => n.id !== id))
-          console.log("successful deleted")
+          // console.log("successful deleted")
+          setMessage(`deleted ${person[0]?.name}`)
+          setType('success')
         })
         .catch(error => {
-          console.log(error.message)
-          alert(
-            `person '${id}' was already deleted from server`
-          )
+          // alert(`person '${id}' was already deleted from server`)
           setPersons(persons.filter(n => n.id !== id))
+          setMessage(`information of ${person[0]?.name} has already been removed`)
+          setType('error')
         })
     }    
 
@@ -75,12 +87,13 @@ const App = () => {
       .update(id, changedPerson)
       .then(returnedPerson => {
         setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+        setMessage(`Updated ${returnedPerson.name}`)
       })
       .catch(error => {
-        alert(
-          `person '${persons[0]?.name}' was already deleted from server`
-        )
+        // alert(`person '${persons[0]?.name}' was already deleted from server`)
         setPersons(persons.filter(p => p.id !== id))
+        setMessage(error.message)
+        setType('error')
       })
   }
 
@@ -105,6 +118,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      {message !== '' &&
+        <Notification message={message} type={type} />
+      }
       <Filter nameFilter={nameFilter} onChange={handleNameFilterChange} />
       <h3>add a new</h3>
       <PersonForm
