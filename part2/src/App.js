@@ -12,6 +12,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
 
   const [ nameFilter, setNameFilter ] = useState('')
+
   useEffect(() => {
     personService
       .getAll()
@@ -22,21 +23,23 @@ const App = () => {
   
   const addPerson = (event) => {
     event.preventDefault()
-
-    if (persons.find(element => element.name === newName)) {
-      window.alert(`${newName} is already added to phonebook`)
+    const person = persons.filter(p => p.name === newName)
+    if (person.length > 0) {
+      if(window.confirm(`${newName} is already added to phonebook, reace the old number with a new one?`)) {
+        updatePerson(person[0]?.id)
+      }
       return
     }
     
-    const person = {
+    const newPerson = {
       name: newName,
       number: newNumber
     }
 
     personService
-      .create(person)
-      .then(returnedNote => {
-        setPersons(persons.concat(returnedNote))
+      .create(newPerson)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
       })
@@ -45,7 +48,7 @@ const App = () => {
 
   const deletePerson = (id) => {
     const person = persons.filter(p => p.id === id)
-    console.log(person)
+
     if(window.confirm(`delete ${person[0]?.name}?`)){
       personService
       .deletePerson(id)
@@ -63,6 +66,24 @@ const App = () => {
     }    
 
   }
+
+  const updatePerson = (id) => {
+    const person = persons.filter(p => p.id === id)
+    const changedPerson = { ...person[0], number: newNumber }
+
+    personService
+      .update(id, changedPerson)
+      .then(returnedPerson => {
+        setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+      })
+      .catch(error => {
+        alert(
+          `person '${persons[0]?.name}' was already deleted from server`
+        )
+        setPersons(persons.filter(p => p.id !== id))
+      })
+  }
+
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
